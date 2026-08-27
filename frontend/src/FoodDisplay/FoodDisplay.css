@@ -1,0 +1,66 @@
+.food-display {
+  width: 100%;
+  margin-top: 30px;
+}
+
+.food-display h2 {
+  color: #262626;
+  font-size: max(2vw, 24px);
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.food-display-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 30px;
+  row-gap: 50px;
+  margin-top: 30px;
+}
+
+/* No Food Message */
+.no-food {
+  margin-top: 30px;
+  text-align: center;
+  color: #808080;
+  font-size: 18px;
+}
+
+/* Tablet */
+@media (max-width: 1050px) {
+  .food-display-list {
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 25px;
+    row-gap: 40px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 750px) {
+  .food-display {
+    margin-top: 20px;
+  }
+
+  .food-display h2 {
+    font-size: 22px;
+  }
+
+  .food-display-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    row-gap: 30px;
+    margin-top: 20px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .food-display-list {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+
+  .food-display h2 {
+    font-size: 20px;
+  }
+}

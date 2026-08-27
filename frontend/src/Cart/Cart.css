@@ -1,0 +1,302 @@
+/* ===============================
+   Cart
+================================ */
+
+.cart {
+  margin-top: 100px;
+  padding: 0 5%;
+}
+
+/* ===============================
+   Cart Items Header
+================================ */
+
+.cart-items-title {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr 1fr 1fr 0.5fr;
+  align-items: center;
+  gap: 10px;
+  color: #808080;
+  font-size: max(1vw, 12px);
+}
+
+/* ===============================
+   Cart Item
+================================ */
+
+.cart-items-item {
+  margin: 10px 0;
+  color: #222;
+  font-size: max(1vw, 13px);
+}
+
+.cart-items-item img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 5px;
+  display: block;
+}
+
+/* ===============================
+   Horizontal Line
+================================ */
+
+.cart hr {
+  height: 1px;
+  background-color: #e2e2e2;
+  border: none;
+  margin: 0;
+}
+
+/* ===============================
+   Remove Button
+================================ */
+
+.cart-items-item .cross {
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: 500;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.cart-items-item .cross:hover {
+  transform: scale(1.2);
+}
+
+/* ===============================
+   Empty Cart
+================================ */
+
+.empty-cart {
+  text-align: center;
+  color: #777;
+  margin: 40px 0;
+  font-size: 18px;
+}
+
+/* ===============================
+   Cart Bottom
+================================ */
+
+.cart-bottom {
+  margin-top: 80px;
+  display: flex;
+  justify-content: space-between;
+  gap: max(12vw, 40px);
+}
+
+/* ===============================
+   Cart Total
+================================ */
+
+.cart-total {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 500px;
+}
+
+.cart-total h2 {
+  margin: 0;
+}
+
+.cart-total-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #555;
+  font-size: 15px;
+}
+
+.cart-total hr {
+  margin: 10px 0;
+}
+
+/* ===============================
+   Checkout Button
+================================ */
+
+.cart-total button {
+  border: none;
+  color: white;
+  background-color: tomato;
+  width: max(15vw, 200px);
+  padding: 12px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.cart-total button:hover {
+  background-color: #e5533d;
+}
+
+.cart-total button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* ===============================
+   Promo Code
+================================ */
+
+.cart-promocode {
+  flex: 1;
+  max-width: 500px;
+}
+
+.cart-promocode p {
+  color: #555;
+  margin: 0 0 10px;
+}
+
+/* ===============================
+   Promo Input
+================================ */
+
+.cart-promocode-input {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #eaeaea;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.cart-promocode-input input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 12px 10px;
+  font-size: 14px;
+}
+
+.cart-promocode-input button {
+  width: max(10vw, 150px);
+  padding: 12px 5px;
+  background-color: black;
+  border: none;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.cart-promocode-input button:hover {
+  background-color: #333;
+}
+
+/* ===============================
+   Tablet
+================================ */
+
+@media (max-width: 900px) {
+  .cart {
+    padding: 0 4%;
+  }
+
+  .cart-bottom {
+    gap: 40px;
+  }
+
+  .cart-items-title {
+    grid-template-columns: 0.8fr 1.5fr 1fr 0.8fr 1fr 0.5fr;
+  }
+}
+
+/* ===============================
+   Mobile
+================================ */
+
+@media (max-width: 750px) {
+  .cart {
+    margin-top: 70px;
+    padding: 0 20px;
+  }
+
+  .cart-items-title {
+    grid-template-columns: 0.8fr 1.5fr 1fr 0.8fr 1fr 0.5fr;
+    font-size: 11px;
+    gap: 5px;
+  }
+
+  .cart-items-item {
+    font-size: 12px;
+  }
+
+  .cart-items-item img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .cart-items-item p {
+    padding-left: 5px;
+  }
+
+  .cart-items-item .cross {
+    font-size: 20px;
+  }
+
+  .cart-bottom {
+    flex-direction: column-reverse;
+    margin-top: 50px;
+    gap: 40px;
+  }
+
+  .cart-total,
+  .cart-promocode {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .cart-total button {
+    width: 100%;
+  }
+
+  .cart-promocode-input button {
+    width: 120px;
+  }
+}
+
+/* ===============================
+   Small Mobile
+================================ */
+
+@media (max-width: 480px) {
+  .cart {
+    padding: 0 10px;
+  }
+
+  .cart-items-title {
+    font-size: 10px;
+  }
+
+  .cart-items-item {
+    font-size: 11px;
+  }
+
+  .cart-items-item img {
+    width: 35px;
+    height: 35px;
+  }
+
+  .cart-total-details {
+    font-size: 14px;
+  }
+
+  .cart-promocode-input input {
+    min-width: 0;
+    font-size: 12px;
+  }
+
+  .cart-promocode-input button {
+    width: 100px;
+    font-size: 12px;
+  }
+}

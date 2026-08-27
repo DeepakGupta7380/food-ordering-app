@@ -1,0 +1,172 @@
+/* =========================
+   Sidebar
+========================= */
+
+.sidebar {
+  width: 18%;
+  min-height: calc(100vh - 70px);
+
+  border: 1px solid #e5e5e5;
+  border-top: none;
+
+  background-color: #ffffff;
+
+  font-size: 14px;
+}
+
+/* =========================
+   Sidebar Options
+========================= */
+
+.sidebar-options {
+  padding-top: 40px;
+  padding-left: 15px;
+  padding-right: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* =========================
+   Sidebar Option
+========================= */
+
+.sidebar-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+
+  padding: 10px 12px;
+
+  border: 1px solid #d9d9d9;
+  border-right: none;
+
+  border-radius: 4px 0 0 4px;
+
+  background-color: #ffffff;
+
+  color: #505050;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.sidebar-option img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.sidebar-option p {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* =========================
+   Hover
+========================= */
+
+.sidebar-option:hover {
+  background-color: #fff8f6;
+  border-color: tomato;
+  color: tomato;
+}
+
+/* =========================
+   Active
+========================= */
+
+.sidebar-option.active {
+  background-color: #fff0ed;
+  border-color: tomato;
+  color: tomato;
+}
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 80px;
+  }
+
+  .sidebar-options {
+    padding-left: 10px;
+    padding-right: 0;
+    align-items: center;
+  }
+
+  .sidebar-option {
+    justify-content: center;
+    width: 55px;
+    padding: 10px;
+    border-right: 1px solid #d9d9d9;
+    border-radius: 4px;
+  }
+
+  .sidebar-option p {
+    display: none;
+  }
+
+  .sidebar-option img {
+    width: 22px;
+    height: 22px;
+  }
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 500px) {
+  .sidebar {
+    width: 60px;
+    min-height: calc(100vh - 60px);
+  }
+
+  .sidebar-options {
+    padding-top: 25px;
+    padding-left: 6px;
+  }
+
+  .sidebar-option {
+    width: 45px;
+    padding: 9px;
+  }
+
+  .sidebar-option img {
+    width: 19px;
+    height: 19px;
+  }
+}
+
+/* =========================
+   Small Mobile
+========================= */
+
+@media (max-width: 350px) {
+  .sidebar {
+    width: 52px;
+  }
+
+  .sidebar-options {
+    padding-left: 4px;
+  }
+
+  .sidebar-option {
+    width: 40px;
+    padding: 8px;
+  }
+
+  .sidebar-option img {
+    width: 17px;
+    height: 17px;
+  }
+}

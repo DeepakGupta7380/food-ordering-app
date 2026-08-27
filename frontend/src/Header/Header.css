@@ -1,0 +1,222 @@
+/* ===============================
+   Header
+================================ */
+
+.header {
+  width: 100%;
+  min-height: 34vw;
+
+  margin: 30px auto;
+
+  background-image: url("../assets/frontend_assets/header_img.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
+  position: relative;
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+/* ===============================
+   Header Contents
+================================ */
+
+.header-contents {
+  position: absolute;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 1.5vw;
+
+  max-width: 50%;
+
+  left: 6vw;
+  bottom: 10%;
+
+  animation: fadeIn 2s ease-in-out;
+}
+
+/* ===============================
+   Heading
+================================ */
+
+.header-contents h2 {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-weight: 500;
+
+  font-size: max(4.5vw, 22px);
+
+  line-height: 1.2;
+}
+
+/* ===============================
+   Description
+================================ */
+
+.header-contents p {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: max(1vw, 14px);
+
+  line-height: 1.5;
+
+  max-width: 600px;
+}
+
+/* ===============================
+   View Menu Button
+================================ */
+
+.header-contents button {
+  border: none;
+
+  color: #747474;
+
+  background-color: #ffffff;
+
+  font-weight: 500;
+
+  padding: 1vw 2.3vw;
+
+  font-size: max(1vw, 13px);
+
+  border-radius: 50px;
+
+  cursor: pointer;
+
+  transition: all 0.3s ease;
+}
+
+/* Button Hover */
+
+.header-contents button:hover {
+  background-color: tomato;
+
+  color: #ffffff;
+
+  transform: translateY(-2px);
+}
+
+/* Button Active */
+
+.header-contents button:active {
+  transform: translateY(0);
+}
+
+/* ===============================
+   Fade Animation
+================================ */
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===============================
+   Tablet
+================================ */
+
+@media (max-width: 1050px) {
+  .header {
+    min-height: 40vw;
+  }
+
+  .header-contents {
+    max-width: 55%;
+    left: 5vw;
+  }
+
+  .header-contents h2 {
+    font-size: max(4vw, 22px);
+  }
+
+  .header-contents p {
+    font-size: 14px;
+  }
+}
+
+/* ===============================
+   Mobile
+================================ */
+
+@media (max-width: 750px) {
+  .header {
+    min-height: 60vw;
+
+    margin: 20px auto;
+
+    background-size: cover;
+
+    border-radius: 8px;
+  }
+
+  .header-contents {
+    max-width: 70%;
+
+    left: 5vw;
+    bottom: 8%;
+
+    gap: 3vw;
+  }
+
+  .header-contents h2 {
+    font-size: max(6vw, 22px);
+  }
+
+  .header-contents p {
+    display: none;
+  }
+
+  .header-contents button {
+    padding: 2vw 4vw;
+
+    font-size: 14px;
+  }
+}
+
+/* ===============================
+   Small Mobile
+================================ */
+
+@media (max-width: 480px) {
+  .header {
+    min-height: 65vw;
+
+    margin: 15px auto;
+  }
+
+  .header-contents {
+    max-width: 80%;
+
+    left: 5vw;
+    bottom: 7%;
+
+    gap: 12px;
+  }
+
+  .header-contents h2 {
+    font-size: 24px;
+  }
+
+  .header-contents button {
+    padding: 9px 18px;
+
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,199 @@
+/* =================================
+   Google Font
+================================= */
+
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
+
+
+/* =================================
+   Global Reset
+================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+
+  box-sizing: border-box;
+
+  font-family: "Outfit", sans-serif;
+
+  scroll-behavior: smooth;
+}
+
+
+/* =================================
+   HTML & Body
+================================= */
+
+html {
+  width: 100%;
+
+  scroll-behavior: smooth;
+}
+
+body {
+  width: 100%;
+
+  min-height: 100vh;
+
+  background-color: #ffffff;
+
+  color: #262626;
+
+  font-size: 16px;
+
+  overflow-x: hidden;
+}
+
+
+/* =================================
+   Root
+================================= */
+
+#root {
+  width: 100%;
+
+  min-height: 100vh;
+}
+
+
+/* =================================
+   App Container
+================================= */
+
+.app {
+  width: 80%;
+
+  max-width: 1400px;
+
+  margin: 0 auto;
+}
+
+
+/* =================================
+   Links
+================================= */
+
+a {
+  text-decoration: none;
+
+  color: inherit;
+}
+
+
+/* =================================
+   Images
+================================= */
+
+img {
+  max-width: 100%;
+
+  display: block;
+}
+
+
+/* =================================
+   Buttons
+================================= */
+
+button {
+  font-family: "Outfit", sans-serif;
+
+  cursor: pointer;
+}
+
+
+/* =================================
+   Input / Textarea
+================================= */
+
+input,
+textarea,
+select {
+  font-family: "Outfit", sans-serif;
+}
+
+
+/* =================================
+   Remove Default Button Outline
+================================= */
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid tomato;
+
+  outline-offset: 2px;
+}
+
+
+/* =================================
+   Selection
+================================= */
+
+::selection {
+  background-color: tomato;
+
+  color: white;
+}
+
+
+/* =================================
+   Fade In Animation
+================================= */
+
+@keyframes fadeIn {
+
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+
+}
+
+
+/* =================================
+   Mobile / Tablet
+================================= */
+
+@media (max-width: 1050px) {
+
+  .app {
+    width: 85%;
+  }
+
+}
+
+
+/* =================================
+   Mobile
+================================= */
+
+@media (max-width: 750px) {
+
+  .app {
+    width: 90%;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+}
+
+
+/* =================================
+   Small Mobile
+================================= */
+
+@media (max-width: 480px) {
+
+  .app {
+    width: 92%;
+  }
+
+}

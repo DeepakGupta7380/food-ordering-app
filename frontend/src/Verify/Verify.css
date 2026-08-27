@@ -1,0 +1,110 @@
+/* ===============================
+   Verify Page
+================================ */
+
+.verify {
+  min-height: 60vh;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 20px;
+
+  padding: 40px 20px;
+
+  box-sizing: border-box;
+}
+
+/* ===============================
+   Loading Spinner
+================================ */
+
+.verify .spinner {
+  width: 70px;
+  height: 70px;
+
+  border: 5px solid #e5e5e5;
+
+  border-top-color: tomato;
+
+  border-radius: 50%;
+
+  animation: rotate 1s linear infinite;
+}
+
+/* ===============================
+   Verification Text
+================================ */
+
+.verify p {
+  margin: 0;
+
+  color: #555;
+
+  font-size: 16px;
+
+  font-weight: 500;
+
+  text-align: center;
+}
+
+/* ===============================
+   Spinner Animation
+================================ */
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===============================
+   Mobile
+================================ */
+
+@media (max-width: 750px) {
+  .verify {
+    min-height: 55vh;
+
+    padding: 30px 15px;
+
+    gap: 15px;
+  }
+
+  .verify .spinner {
+    width: 55px;
+    height: 55px;
+
+    border-width: 4px;
+  }
+
+  .verify p {
+    font-size: 14px;
+  }
+}
+
+/* ===============================
+   Small Mobile
+================================ */
+
+@media (max-width: 480px) {
+  .verify {
+    min-height: 50vh;
+  }
+
+  .verify .spinner {
+    width: 50px;
+    height: 50px;
+  }
+
+  .verify p {
+    font-size: 13px;
+  }
+}

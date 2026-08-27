@@ -1,0 +1,327 @@
+/* =========================
+   List Container
+========================= */
+
+.list {
+  width: 100%;
+  padding: 30px;
+  color: #505050;
+}
+
+.list > p {
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* =========================
+   List Header
+========================= */
+
+.list-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.list-header h3 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #333;
+}
+
+.list-header button {
+  border: none;
+  padding: 9px 16px;
+  background-color: tomato;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.list-header button:hover {
+  opacity: 0.9;
+}
+
+.list-header button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =========================
+   List Table
+========================= */
+
+.list-table {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* =========================
+   Table Row
+========================= */
+
+.list-table-format {
+  display: grid;
+
+  grid-template-columns:
+    0.5fr
+    2fr
+    1fr
+    1fr
+    0.5fr;
+
+  align-items: center;
+  gap: 15px;
+
+  width: 100%;
+  min-height: 70px;
+
+  padding: 12px 15px;
+
+  border: 1px solid #e2e2e2;
+  border-bottom: none;
+
+  background-color: #fff;
+
+  font-size: 13px;
+
+  transition: 0.2s ease;
+}
+
+.list-table-format:last-child {
+  border-bottom: 1px solid #e2e2e2;
+}
+
+.list-table-format:hover {
+  background-color: #fffaf8;
+}
+
+/* =========================
+   Table Title
+========================= */
+
+.list-table-format.title {
+  min-height: 50px;
+  background-color: #f8f8f8;
+
+  color: #555;
+  font-weight: 600;
+}
+
+/* =========================
+   Product Image
+========================= */
+
+.list-table-format img {
+  width: 50px;
+  height: 50px;
+
+  object-fit: cover;
+
+  border-radius: 4px;
+}
+
+/* =========================
+   Text
+========================= */
+
+.list-table-format p {
+  margin: 0;
+  word-break: break-word;
+}
+
+/* =========================
+   Delete Button
+========================= */
+
+.list-table-format .delete-btn {
+  border: none;
+  background: transparent;
+
+  color: tomato;
+
+  font-size: 18px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  transition: 0.2s;
+}
+
+.list-table-format .delete-btn:hover {
+  background-color: #ffe8e4;
+}
+
+.list-table-format .delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Loading / Empty Message
+========================= */
+
+.list-message {
+  width: 100%;
+  padding: 40px 20px;
+
+  text-align: center;
+
+  border: 1px solid #e2e2e2;
+  color: #777;
+
+  background-color: #fff;
+}
+
+.list-message p {
+  margin: 0;
+  font-size: 15px;
+}
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 900px) {
+  .list {
+    padding: 25px 20px;
+  }
+
+  .list-table-format {
+    grid-template-columns:
+      60px
+      2fr
+      1fr
+      1fr
+      50px;
+
+    gap: 10px;
+
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .list-table-format img {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 600px) {
+  .list {
+    padding: 20px 12px;
+  }
+
+  .list-header h3 {
+    font-size: 18px;
+  }
+
+  .list-header button {
+    padding: 7px 12px;
+    font-size: 12px;
+  }
+
+  /* Header hide on mobile */
+  .list-table-format.title {
+    display: none;
+  }
+
+  .list-table-format {
+    grid-template-columns:
+      50px
+      1fr
+      1fr;
+
+    gap: 10px;
+
+    min-height: auto;
+
+    padding: 12px 10px;
+
+    font-size: 12px;
+
+    border-bottom: 1px solid #e2e2e2;
+
+    border-radius: 4px;
+
+    margin-bottom: 8px;
+  }
+
+  .list-table-format img {
+    width: 45px;
+    height: 45px;
+  }
+
+  /* Category */
+  .list-table-format p:nth-child(3) {
+    color: #777;
+  }
+
+  /* Price */
+  .list-table-format p:nth-child(4) {
+    font-weight: 600;
+  }
+
+  /* Delete button */
+  .list-table-format .delete-btn {
+    grid-column: 3;
+    grid-row: 1;
+
+    justify-self: end;
+  }
+}
+
+/* =========================
+   Small Mobile
+========================= */
+
+@media (max-width: 400px) {
+  .list {
+    padding: 15px 8px;
+  }
+
+  .list-header h3 {
+    font-size: 16px;
+  }
+
+  .list-header button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+
+  .list-table-format {
+    grid-template-columns: 45px 1fr 40px;
+    gap: 8px;
+    padding: 10px;
+    font-size: 11px;
+  }
+
+  .list-table-format img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .list-table-format .delete-btn {
+    font-size: 16px;
+  }
+}

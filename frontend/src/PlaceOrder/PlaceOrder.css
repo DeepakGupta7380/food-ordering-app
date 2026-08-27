@@ -1,0 +1,266 @@
+/* =================================
+   Place Order
+================================= */
+
+.place-order {
+  width: 100%;
+
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 60px;
+
+  margin-top: 80px;
+
+  box-sizing: border-box;
+}
+
+
+/* =================================
+   Left - Delivery Information
+================================= */
+
+.place-order-left {
+  width: 100%;
+  max-width: 600px;
+}
+
+.place-order-left .title {
+  margin: 0 0 35px;
+
+  color: #262626;
+
+  font-size: 30px;
+
+  font-weight: 600;
+}
+
+
+/* =================================
+   Input Fields
+================================= */
+
+.place-order-left input {
+  width: 100%;
+
+  margin-bottom: 15px;
+
+  padding: 12px 13px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #c9c9c9;
+
+  border-radius: 5px;
+
+  outline: none;
+
+  background-color: #ffffff;
+
+  color: #333333;
+
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+
+/* Input Focus */
+
+.place-order-left input:focus {
+  border-color: tomato;
+
+  box-shadow: 0 0 0 2px rgba(255, 99, 71, 0.1);
+}
+
+
+/* Placeholder */
+
+.place-order-left input::placeholder {
+  color: #999999;
+}
+
+
+/* =================================
+   Two Input Fields
+================================= */
+
+.place-order-left .multi-fields {
+  width: 100%;
+
+  display: flex;
+
+  gap: 12px;
+}
+
+.place-order-left .multi-fields input {
+  flex: 1;
+}
+
+
+/* =================================
+   Right - Cart Total
+================================= */
+
+.place-order-right {
+  width: 100%;
+
+  max-width: 500px;
+}
+
+
+/* =================================
+   Cart Total Button
+================================= */
+
+.place-order .cart-total button {
+  width: 100%;
+
+  margin-top: 30px;
+
+  border: none;
+
+  padding: 13px 15px;
+
+  border-radius: 5px;
+
+  background-color: tomato;
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
+}
+
+
+/* Button Hover */
+
+.place-order .cart-total button:hover:not(:disabled) {
+  background-color: #e84f32;
+
+  transform: translateY(-1px);
+}
+
+
+/* Button Disabled */
+
+.place-order .cart-total button:disabled {
+  background-color: #ff9a88;
+
+  opacity: 0.75;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =================================
+   Tablet
+================================= */
+
+@media (max-width: 1000px) {
+  .place-order {
+    gap: 35px;
+  }
+
+  .place-order-left {
+    max-width: 55%;
+  }
+
+  .place-order-right {
+    max-width: 45%;
+  }
+
+  .place-order-left .title {
+    font-size: 27px;
+
+    margin-bottom: 30px;
+  }
+}
+
+
+/* =================================
+   Mobile
+================================= */
+
+@media (max-width: 800px) {
+  .place-order {
+    flex-direction: column;
+
+    gap: 40px;
+
+    margin-top: 50px;
+  }
+
+  .place-order-left,
+  .place-order-right {
+    width: 100%;
+
+    max-width: 100%;
+  }
+
+  .place-order-left .title {
+    font-size: 26px;
+
+    margin-bottom: 25px;
+  }
+
+  .place-order-left input {
+    padding: 11px 12px;
+  }
+
+  .place-order .cart-total button {
+    margin-top: 25px;
+  }
+}
+
+
+/* =================================
+   Small Mobile
+================================= */
+
+@media (max-width: 480px) {
+  .place-order {
+    margin-top: 30px;
+
+    gap: 30px;
+  }
+
+  .place-order-left .title {
+    font-size: 23px;
+
+    margin-bottom: 20px;
+  }
+
+  /* Stack First/Last Name */
+
+  .place-order-left .multi-fields {
+    flex-direction: column;
+
+    gap: 0;
+  }
+
+  .place-order-left input {
+    font-size: 13px;
+
+    padding: 11px;
+  }
+
+  .place-order .cart-total button {
+    font-size: 13px;
+
+    padding: 12px;
+  }
+}

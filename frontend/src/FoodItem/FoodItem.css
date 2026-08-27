@@ -1,0 +1,192 @@
+/* ===============================
+   Footer
+================================ */
+
+.footer {
+  width: 100%;
+  color: #d9d9d9;
+  background-color: #323232;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  gap: 20px;
+  padding: 80px 8vw 20px;
+  margin-top: 100px;
+
+  box-sizing: border-box;
+}
+
+/* ===============================
+   Footer Content
+================================ */
+
+.footer-content {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 80px;
+}
+
+/* ===============================
+   Footer Sections
+================================ */
+
+.footer-content-left,
+.footer-content-center,
+.footer-content-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* ===============================
+   Footer Text
+================================ */
+
+.footer-content-left p {
+  max-width: 500px;
+  line-height: 1.6;
+}
+
+.footer-content-center h2,
+.footer-content-right h2 {
+  color: #ffffff;
+  margin: 0;
+}
+
+/* ===============================
+   Footer Lists
+================================ */
+
+.footer-content-left ul,
+.footer-content-center ul,
+.footer-content-right ul {
+  padding: 0;
+  margin: 0;
+}
+
+.footer-content-left li,
+.footer-content-center li,
+.footer-content-right li {
+  list-style: none;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.footer-content-left li:hover,
+.footer-content-center li:hover,
+.footer-content-right li:hover {
+  color: tomato;
+}
+
+/* ===============================
+   Social Icons
+================================ */
+
+.footer-social-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.footer-social-icons img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.footer-social-icons img:hover {
+  transform: scale(1.1);
+}
+
+/* ===============================
+   Footer Line
+================================ */
+
+.footer hr {
+  width: 100%;
+  height: 1px;
+  margin: 20px 0 10px;
+
+  background-color: #666;
+  border: none;
+}
+
+/* ===============================
+   Copyright
+================================ */
+
+.footer-copyright {
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ===============================
+   Tablet
+================================ */
+
+@media (max-width: 900px) {
+  .footer {
+    padding: 70px 5vw 20px;
+  }
+
+  .footer-content {
+    gap: 40px;
+  }
+}
+
+/* ===============================
+   Mobile
+================================ */
+
+@media (max-width: 750px) {
+  .footer {
+    padding: 60px 6vw 20px;
+    margin-top: 70px;
+  }
+
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 35px;
+  }
+
+  .footer-content-left,
+  .footer-content-center,
+  .footer-content-right {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .footer-copyright {
+    text-align: center;
+    font-size: 13px;
+  }
+}
+
+/* ===============================
+   Small Mobile
+================================ */
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 50px 20px 20px;
+  }
+
+  .footer-content {
+    gap: 30px;
+  }
+
+  .footer-social-icons img {
+    width: 32px;
+    height: 32px;
+  }
+}

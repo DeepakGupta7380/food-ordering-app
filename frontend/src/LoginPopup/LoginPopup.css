@@ -1,0 +1,347 @@
+/* ===============================
+   Login Popup Overlay
+================================ */
+
+.login-popup {
+  position: fixed;
+
+  top: 0;
+  left: 0;
+
+  z-index: 9999;
+
+  width: 100%;
+  height: 100vh;
+
+  background-color: rgba(0, 0, 0, 0.55);
+
+  display: grid;
+  place-items: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  animation: popupFadeIn 0.25s ease-in-out;
+}
+
+/* ===============================
+   Popup Container
+================================ */
+
+.login-popup-container {
+  width: min(90vw, 420px);
+
+  color: #808080;
+
+  background-color: #ffffff;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 22px;
+
+  padding: 30px;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+
+  box-sizing: border-box;
+
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+
+  animation: popupSlideIn 0.3s ease-in-out;
+}
+
+/* ===============================
+   Popup Title
+================================ */
+
+.login-popup-title {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+}
+
+.login-popup-title h2 {
+  margin: 0;
+
+  color: #222222;
+
+  font-size: 25px;
+
+  font-weight: 600;
+}
+
+/* ===============================
+   Close Icon
+================================ */
+
+.login-popup-title img {
+  width: 18px;
+  height: 18px;
+
+  object-fit: contain;
+
+  cursor: pointer;
+
+  transition: transform 0.2s ease;
+}
+
+.login-popup-title img:hover {
+  transform: rotate(90deg) scale(1.1);
+}
+
+/* ===============================
+   Inputs Container
+================================ */
+
+.login-popup-inputs {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+/* ===============================
+   Input Fields
+================================ */
+
+.login-popup-inputs input {
+  width: 100%;
+
+  outline: none;
+
+  border: 1px solid #c9c9c9;
+
+  padding: 12px;
+
+  border-radius: 5px;
+
+  font-size: 14px;
+
+  box-sizing: border-box;
+
+  transition: border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.login-popup-inputs input:focus {
+  border-color: tomato;
+
+  box-shadow: 0 0 0 2px rgba(255, 99, 71, 0.1);
+}
+
+.login-popup-inputs input::placeholder {
+  color: #999999;
+}
+
+/* ===============================
+   Submit Button
+================================ */
+
+.login-popup-container > button {
+  width: 100%;
+
+  border: none;
+
+  padding: 12px;
+
+  border-radius: 5px;
+
+  color: #ffffff;
+
+  background-color: tomato;
+
+  font-size: 15px;
+
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: background-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.login-popup-container > button:hover:not(:disabled) {
+  background-color: #e84f32;
+
+  transform: translateY(-1px);
+}
+
+.login-popup-container > button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* ===============================
+   Disabled / Loading Button
+================================ */
+
+.login-popup-container > button:disabled {
+  background-color: #ff9b88;
+
+  cursor: not-allowed;
+
+  opacity: 0.8;
+}
+
+/* ===============================
+   Terms & Conditions
+================================ */
+
+.login-popup-condition {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 8px;
+
+  margin-top: -8px;
+}
+
+.login-popup-condition input {
+  width: 15px;
+  height: 15px;
+
+  margin-top: 2px;
+
+  accent-color: tomato;
+
+  cursor: pointer;
+}
+
+.login-popup-condition p {
+  margin: 0;
+
+  color: #777777;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+/* ===============================
+   Login / Sign Up Text
+================================ */
+
+.login-popup-container > p {
+  margin: 0;
+
+  text-align: center;
+
+  color: #555555;
+
+  font-size: 13px;
+}
+
+.login-popup p span {
+  color: tomato;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: color 0.2s ease;
+}
+
+.login-popup p span:hover {
+  color: #e84f32;
+
+  text-decoration: underline;
+}
+
+/* ===============================
+   Popup Animation
+================================ */
+
+@keyframes popupFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes popupSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ===============================
+   Tablet
+================================ */
+
+@media (max-width: 750px) {
+  .login-popup {
+    padding: 15px;
+  }
+
+  .login-popup-container {
+    width: min(92vw, 400px);
+
+    padding: 25px;
+
+    gap: 20px;
+  }
+
+  .login-popup-title h2 {
+    font-size: 23px;
+  }
+}
+
+/* ===============================
+   Small Mobile
+================================ */
+
+@media (max-width: 480px) {
+  .login-popup {
+    padding: 10px;
+  }
+
+  .login-popup-container {
+    width: 100%;
+
+    max-width: 360px;
+
+    padding: 22px 20px;
+
+    border-radius: 8px;
+  }
+
+  .login-popup-title h2 {
+    font-size: 21px;
+  }
+
+  .login-popup-inputs {
+    gap: 15px;
+  }
+
+  .login-popup-inputs input {
+    padding: 11px;
+  }
+
+  .login-popup-container > button {
+    padding: 11px;
+  }
+
+  .login-popup-condition p {
+    font-size: 11px;
+  }
+
+  .login-popup-container > p {
+    font-size: 12px;
+  }
+}
