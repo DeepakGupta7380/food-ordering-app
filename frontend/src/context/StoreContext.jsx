@@ -16,8 +16,8 @@ const StoreContextProvider = (props) => {
   // Backend URL
   // ===============================
   const url =
-    import.meta.env.VITE_API_URL ||
-    "https://tomato-mern-stack.onrender.com";
+    // import.meta.env.VITE_API_URL ||
+    "https://food-ordering-app-692x.onrender.com";
 
   // ===============================
   // Axios Headers

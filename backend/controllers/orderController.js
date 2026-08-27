@@ -12,8 +12,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 // Frontend URL
-const frontend_url =
-  process.env.FRONTEND_URL || "https://tomato-mern-stack.vercel.app";
+const frontend_url = "https://food-ordering-app-virid-six.vercel.app/";
 
 // ===============================
 // Place Order
