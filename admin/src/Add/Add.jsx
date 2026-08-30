@@ -192,24 +192,7 @@ const Add = ({ url }) => {
         image
       );
 
-
-      // ===============================
-      // API Request
-      // ===============================
-
-      // const response = await axios.post(
-      //   `${url}/api/food/add`,
-      //   formData,
-      //   {
-      //     headers: {
-      //       token: token,
-      //     },
-      //   }
-      // );
-
-      // ===============================
-      // API Request
-      // ===============================
+      
 
       const response = await axios.post(
         `${url}/api/food/add`,

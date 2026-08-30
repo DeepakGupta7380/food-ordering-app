@@ -5,6 +5,7 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) => {
   const [token, setToken] = useState("");
   const [admin, setAdmin] = useState(false);
+  const [foodList, setFoodList] = useState([]);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -26,6 +27,8 @@ const StoreContextProvider = (props) => {
     setToken,
     admin,
     setAdmin,
+    foodList,
+    setFoodList,
   };
 
   return (
@@ -36,3 +39,6 @@ const StoreContextProvider = (props) => {
 };
 
 export default StoreContextProvider;
+
+
+

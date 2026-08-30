@@ -1,3 +1,5 @@
+
+
 import React, { useContext, useState } from "react";
 import "./LoginPopup.css";
 
@@ -8,7 +10,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const LoginPopup = ({ setShowLogin }) => {
-  const { url, setToken } = useContext(StoreContext);
+  const { url, setToken, loadCartData } = useContext(StoreContext);
 
   const [currentState, setCurrentState] = useState("Login");
   const [loading, setLoading] = useState(false);
@@ -25,8 +27,8 @@ const LoginPopup = ({ setShowLogin }) => {
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
 
-    setData((prevData) => ({
-      ...prevData,
+    setData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
@@ -52,50 +54,83 @@ const LoginPopup = ({ setShowLogin }) => {
         data
       );
 
-      if (response.data.success) {
-        // Save JWT token
-        const token = response.data.token;
+      console.log("Login Response:", response.data);
 
-        setToken(token);
-
-        localStorage.setItem("token", token);
-
-        // Save role if backend sends it
-        if (response.data.role) {
-          localStorage.setItem(
-            "role",
-            response.data.role
-          );
-        }
-
-        toast.success(
-          currentState === "Login"
-            ? "Login Successfully"
-            : "Account Created Successfully"
-        );
-
-        // Close popup
-        setShowLogin(false);
-
-        // Reset form
-        setData({
-          name: "",
-          email: "",
-          password: "",
-        });
-      } else {
+      if (!response.data.success) {
         toast.error(
-          response.data.message || "Something went wrong"
+          response.data.message || "Authentication failed"
+        );
+        return;
+      }
+
+      // ===============================
+      // Get JWT Token
+      // ===============================
+      const newToken = response.data.token;
+
+      if (!newToken) {
+        toast.error("Token not received from server");
+        return;
+      }
+
+      // ===============================
+      // Save Token
+      // ===============================
+      localStorage.setItem("token", newToken);
+
+      // Save role
+      if (response.data.role) {
+        localStorage.setItem(
+          "role",
+          response.data.role
         );
       }
-    } catch (error) {
-      console.error("Authentication Error:", error);
 
-      if (error.response) {
-        toast.error(
-          error.response.data?.message ||
-            "Server Error. Please try again."
+      // Update Context
+      setToken(newToken);
+
+      // ===============================
+      // Load User Cart
+      // ===============================
+      try {
+        await loadCartData(newToken);
+      } catch (cartError) {
+        console.error(
+          "Cart Load Error:",
+          cartError
         );
+      }
+
+      // ===============================
+      // Success Message
+      // ===============================
+      toast.success(
+        currentState === "Login"
+          ? "Login Successfully"
+          : "Account Created Successfully"
+      );
+
+      // Close popup
+      setShowLogin(false);
+
+      // Reset form
+      setData({
+        name: "",
+        email: "",
+        password: "",
+      });
+
+    } catch (error) {
+      console.error(
+        "Authentication Error:",
+        error
+      );
+
+      const message =
+        error.response?.data?.message;
+
+      if (message) {
+        toast.error(message);
       } else if (error.request) {
         toast.error(
           "Server is not responding. Please check your backend."
@@ -114,8 +149,8 @@ const LoginPopup = ({ setShowLogin }) => {
   // Switch Login / Sign Up
   // ===============================
   const switchState = () => {
-    setCurrentState((prevState) =>
-      prevState === "Login"
+    setCurrentState((prev) =>
+      prev === "Login"
         ? "Sign Up"
         : "Login"
     );
@@ -135,11 +170,9 @@ const LoginPopup = ({ setShowLogin }) => {
         className="login-popup-container"
       >
 
-        {/* ===============================
-            Title
-        =============================== */}
-
+        {/* Title */}
         <div className="login-popup-title">
+
           <h2>{currentState}</h2>
 
           <img
@@ -148,21 +181,19 @@ const LoginPopup = ({ setShowLogin }) => {
             alt="Close"
             title="Close"
           />
+
         </div>
 
-        {/* ===============================
-            Inputs
-        =============================== */}
-
+        {/* Inputs */}
         <div className="login-popup-inputs">
 
           {currentState === "Sign Up" && (
             <input
               name="name"
-              onChange={onChangeHandler}
-              value={data.name}
               type="text"
               placeholder="Your name"
+              value={data.name}
+              onChange={onChangeHandler}
               autoComplete="name"
               required
             />
@@ -170,50 +201,44 @@ const LoginPopup = ({ setShowLogin }) => {
 
           <input
             name="email"
-            onChange={onChangeHandler}
-            value={data.email}
             type="email"
             placeholder="Your email"
+            value={data.email}
+            onChange={onChangeHandler}
             autoComplete="email"
             required
           />
 
           <input
             name="password"
-            onChange={onChangeHandler}
-            value={data.password}
             type="password"
             placeholder="Your password"
+            value={data.password}
+            onChange={onChangeHandler}
             autoComplete={
               currentState === "Login"
                 ? "current-password"
                 : "new-password"
             }
-            minLength="8"
+            minLength={6}
             required
           />
 
         </div>
 
-        {/* ===============================
-            Submit Button
-        =============================== */}
-
+        {/* Button */}
         <button
           type="submit"
           disabled={loading}
         >
           {loading
             ? "Please wait..."
-            : currentState === "Sign Up"
-            ? "Create Account"
-            : "Login"}
+            : currentState === "Login"
+            ? "Login"
+            : "Create Account"}
         </button>
 
-        {/* ===============================
-            Terms & Conditions
-        =============================== */}
-
+        {/* Terms */}
         <div className="login-popup-condition">
 
           <input
@@ -228,10 +253,7 @@ const LoginPopup = ({ setShowLogin }) => {
 
         </div>
 
-        {/* ===============================
-            Switch Login / Sign Up
-        =============================== */}
-
+        {/* Switch */}
         {currentState === "Login" ? (
           <p>
             Create a new account?{" "}
@@ -249,6 +271,7 @@ const LoginPopup = ({ setShowLogin }) => {
         )}
 
       </form>
+
     </div>
   );
 };

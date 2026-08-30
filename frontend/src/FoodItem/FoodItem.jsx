@@ -24,7 +24,7 @@ const FoodItem = ({
   // Add Item
   // ===============================
   const handleAddToCart = () => {
-    addToCart(id);
+    addToCart(userId, id);
   };
 
   // ===============================
@@ -32,7 +32,7 @@ const FoodItem = ({
   // ===============================
   const handleRemoveFromCart = () => {
     if (quantity > 0) {
-      removeFromCart(id);
+      removeFromCart(userId, id);
     }
   };
 
@@ -118,3 +118,7 @@ const FoodItem = ({
 };
 
 export default FoodItem;
+
+
+
+
