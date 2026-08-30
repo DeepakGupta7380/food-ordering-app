@@ -197,12 +197,26 @@ const Add = ({ url }) => {
       // API Request
       // ===============================
 
+      // const response = await axios.post(
+      //   `${url}/api/food/add`,
+      //   formData,
+      //   {
+      //     headers: {
+      //       token: token,
+      //     },
+      //   }
+      // );
+
+      // ===============================
+      // API Request
+      // ===============================
+
       const response = await axios.post(
         `${url}/api/food/add`,
         formData,
         {
           headers: {
-            token: token,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -216,7 +230,7 @@ const Add = ({ url }) => {
 
         toast.success(
           response.data.message ||
-            "Food Added Successfully"
+          "Food Added Successfully"
         );
 
 
@@ -245,7 +259,7 @@ const Add = ({ url }) => {
 
         toast.error(
           response.data.message ||
-            "Unable to add food"
+          "Unable to add food"
         );
 
       }
@@ -262,7 +276,7 @@ const Add = ({ url }) => {
 
         toast.error(
           error.response.data?.message ||
-            "Server Error"
+          "Server Error"
         );
 
       } else if (error.request) {

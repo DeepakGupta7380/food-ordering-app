@@ -16,4 +16,4 @@ export const assets ={
 
 
 
-export const url = 'https://food-ordering-app-692x.onrender.com'
+export const url = 'https://food-ordering-app-dqtz.onrender.com'

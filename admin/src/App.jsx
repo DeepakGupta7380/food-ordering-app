@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   const { token, admin } = useContext(StoreContext);
 
-  const url = "https://food-ordering-app-692x.onrender.com";
+  const url ="https://food-ordering-app-dqtz.onrender.com";
 
   return (
     <>
