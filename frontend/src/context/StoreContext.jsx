@@ -1,6 +1,3 @@
-
-
-
 import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -18,24 +15,32 @@ const StoreContextProvider = (props) => {
     const [admin, setAdmin] = useState(false);
     const [food_list, setFoodList] = useState([]);
 
+
     // ===============================
     // Backend URL
     // ===============================
 
     const url =
-        "https://food-ordering-app-dqtz.onrender.com";
+        "https://food-ordering-app-zd8f.onrender.com";
+
 
     // ===============================
     // Axios Auth Headers
     // ===============================
 
     const getAuthHeaders = (userToken = token) => {
+
+        if (!userToken) {
+            return {};
+        }
+
         return {
             headers: {
                 Authorization: `Bearer ${userToken}`,
             },
         };
     };
+
 
     // ===============================
     // Add To Cart
@@ -45,86 +50,82 @@ const StoreContextProvider = (props) => {
 
         try {
 
-            if (!token) {
-                toast.error("Please login first");
+            // --------------------------------
+            // Check Item ID
+            // --------------------------------
+
+            if (!itemId) {
+
+                console.log("itemId is missing");
+
+                toast.error("Food item not found");
+
                 return;
             }
 
+
+            // --------------------------------
+            // Check Login
+            // --------------------------------
+
+            if (!token) {
+
+                toast.error("Please login first");
+
+                return;
+            }
+
+
+            // --------------------------------
+            // Optimistic Quantity Increase
+            // --------------------------------
+
+            setCartItems((prev) => ({
+                ...prev,
+                [itemId]: (prev[itemId] || 0) + 1,
+            }));
+
+
+            // --------------------------------
+            // Send Request To Backend
+            // --------------------------------
+
             const response = await axios.post(
+
                 `${url}/api/cart/add`,
-                { itemId },
-                getAuthHeaders()
+
+                {
+                    userId: userId || undefined,
+                    itemId: itemId,
+                },
+
+                getAuthHeaders(token)
+
             );
 
-            if (response.data.success) {
 
-                setCartItems((prev) => ({
-                    ...prev,
-                    [itemId]: (prev[itemId] || 0) + 1,
-                }));
+            // --------------------------------
+            // Backend Response
+            // --------------------------------
+
+            if (response.data?.success) {
 
                 toast.success("Item Added to Cart");
 
             } else {
 
-                toast.error(
-                    response.data.message ||
-                    "Something went wrong"
-                );
-            }
-
-        } catch (error) {
-
-            console.error(
-                "Add To Cart Error:",
-                error
-            );
-
-            toast.error(
-                error.response?.data?.message ||
-                "Unable to add item to cart"
-            );
-        }
-    };
-
-    // ===============================
-    // Remove From Cart
-    // ===============================
-
-    const removeFromCart = async (itemId) => {
-
-        try {
-
-            if (!token) {
-                toast.error("Please login first");
-                return;
-            }
-
-            const currentQuantity =
-                cartItems[itemId] || 0;
-
-            if (currentQuantity <= 0) {
-                return;
-            }
-
-            const response = await axios.post(
-                `${url}/api/cart/remove`,
-                { itemId },
-                getAuthHeaders()
-            );
-
-            if (response.data.success) {
+                // Backend rejected request
+                // इसलिए frontend quantity वापस करें
 
                 setCartItems((prev) => {
 
                     const updatedCart = {
-                        ...prev
+                        ...prev,
                     };
 
-                    if (currentQuantity > 1) {
+                    if (updatedCart[itemId] > 1) {
 
-                        updatedCart[itemId] =
-                            currentQuantity - 1;
+                        updatedCart[itemId] -= 1;
 
                     } else {
 
@@ -135,24 +136,198 @@ const StoreContextProvider = (props) => {
                     return updatedCart;
                 });
 
+
+                toast.error(
+                    response.data?.message ||
+                    "Unable to add item to cart"
+                );
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Add To Cart Error:",
+                error.response?.data || error.message
+            );
+
+
+            // --------------------------------
+            // API Failed
+            // Quantity वापस करें
+            // --------------------------------
+
+            setCartItems((prev) => {
+
+                const updatedCart = {
+                    ...prev,
+                };
+
+                if (updatedCart[itemId] > 1) {
+
+                    updatedCart[itemId] -= 1;
+
+                } else {
+
+                    delete updatedCart[itemId];
+
+                }
+
+                return updatedCart;
+            });
+
+
+            toast.error(
+                error.response?.data?.message ||
+                "Unable to add item to cart"
+            );
+        }
+    };
+
+
+    // ===============================
+    // Remove From Cart
+    // ===============================
+
+    const removeFromCart = async (userId, itemId) => {
+
+        try {
+
+            // --------------------------------
+            // Check Item ID
+            // --------------------------------
+
+            if (!itemId) {
+
+                console.log("itemId is missing");
+
+                return;
+            }
+
+
+            // --------------------------------
+            // Check Login
+            // --------------------------------
+
+            if (!token) {
+
+                toast.error("Please login first");
+
+                return;
+            }
+
+
+            // --------------------------------
+            // Current Quantity
+            // --------------------------------
+
+            const currentQuantity =
+                cartItems[itemId] || 0;
+
+
+            if (currentQuantity <= 0) {
+
+                return;
+            }
+
+
+            // --------------------------------
+            // Optimistic Quantity Decrease
+            // --------------------------------
+
+            setCartItems((prev) => {
+
+                const updatedCart = {
+                    ...prev,
+                };
+
+                if (currentQuantity > 1) {
+
+                    updatedCart[itemId] =
+                        currentQuantity - 1;
+
+                } else {
+
+                    delete updatedCart[itemId];
+
+                }
+
+                return updatedCart;
+            });
+
+
+            // --------------------------------
+            // Backend Request
+            // --------------------------------
+
+            const response = await axios.post(
+
+                `${url}/api/cart/remove`,
+
+                {
+                    userId: userId || undefined,
+                    itemId: itemId,
+                },
+
+                getAuthHeaders(token)
+
+            );
+
+
+            // --------------------------------
+            // Backend Response
+            // --------------------------------
+
+            if (response.data?.success) {
+
                 toast.success(
                     "Item Removed from Cart"
                 );
 
             } else {
 
+                // Backend failed
+                // Quantity वापस करें
+
+                setCartItems((prev) => ({
+                    ...prev,
+                    [itemId]: currentQuantity,
+                }));
+
+
                 toast.error(
-                    response.data.message ||
-                    "Something went wrong"
+                    response.data?.message ||
+                    "Unable to remove item from cart"
                 );
             }
+
 
         } catch (error) {
 
             console.error(
                 "Remove From Cart Error:",
-                error
+                error.response?.data || error.message
             );
+
+
+            // --------------------------------
+            // API Failed
+            // Quantity वापस करें
+            // --------------------------------
+
+            const currentQuantity =
+                cartItems[itemId] || 0;
+
+
+            if (currentQuantity > 0) {
+
+                setCartItems((prev) => ({
+                    ...prev,
+                    [itemId]:
+                        (prev[itemId] || 0) + 1,
+                }));
+            }
+
 
             toast.error(
                 error.response?.data?.message ||
@@ -161,7 +336,6 @@ const StoreContextProvider = (props) => {
         }
     };
 
-    
 
     // ===============================
     // Total Cart Amount
@@ -171,9 +345,12 @@ const StoreContextProvider = (props) => {
 
         let totalAmount = 0;
 
+
         for (const item in cartItems) {
 
-            const quantity = cartItems[item];
+            const quantity =
+                cartItems[item];
+
 
             if (quantity > 0) {
 
@@ -182,6 +359,7 @@ const StoreContextProvider = (props) => {
                         (product) =>
                             product._id === item
                     );
+
 
                 if (itemInfo) {
 
@@ -192,8 +370,10 @@ const StoreContextProvider = (props) => {
             }
         }
 
+
         return totalAmount;
     };
+
 
     // ===============================
     // Fetch Food List
@@ -207,26 +387,29 @@ const StoreContextProvider = (props) => {
                 `${url}/api/food/list`
             );
 
-            if (response.data.success) {
+
+            if (response.data?.success) {
 
                 setFoodList(
-                    response.data.data
+                    response.data.data || []
                 );
 
             } else {
 
                 toast.error(
-                    response.data.message ||
+                    response.data?.message ||
                     "Food products are not available"
                 );
             }
+
 
         } catch (error) {
 
             console.error(
                 "Food List Error:",
-                error
+                error.response?.data || error.message
             );
+
 
             toast.error(
                 error.response?.data?.message ||
@@ -234,6 +417,7 @@ const StoreContextProvider = (props) => {
             );
         }
     };
+
 
     // ===============================
     // Load Cart Data
@@ -243,13 +427,26 @@ const StoreContextProvider = (props) => {
 
         try {
 
+            if (!userToken) {
+
+                setCartItems({});
+
+                return;
+            }
+
+
             const response = await axios.post(
+
                 `${url}/api/cart/get`,
+
                 {},
+
                 getAuthHeaders(userToken)
+
             );
 
-            if (response.data.success) {
+
+            if (response.data?.success) {
 
                 setCartItems(
                     response.data.cartData || {}
@@ -260,20 +457,24 @@ const StoreContextProvider = (props) => {
                 setCartItems({});
 
                 console.log(
-                    response.data.message
+                    response.data?.message ||
+                    "Cart data not found"
                 );
             }
+
 
         } catch (error) {
 
             console.error(
                 "Load Cart Error:",
-                error
+                error.response?.data || error.message
             );
+
 
             setCartItems({});
         }
     };
+
 
     // ===============================
     // Load Token + Admin
@@ -284,14 +485,25 @@ const StoreContextProvider = (props) => {
         const savedToken =
             localStorage.getItem("token");
 
+
         const savedAdmin =
             localStorage.getItem("admin");
+
+
+        // --------------------------------
+        // Set Token
+        // --------------------------------
 
         if (savedToken) {
 
             setToken(savedToken);
 
         }
+
+
+        // --------------------------------
+        // Set Admin
+        // --------------------------------
 
         if (savedAdmin === "true") {
 
@@ -303,15 +515,30 @@ const StoreContextProvider = (props) => {
 
         }
 
+
+        // --------------------------------
+        // Fetch Food
+        // --------------------------------
+
         fetchFoodList();
+
+
+        // --------------------------------
+        // Load Cart
+        // --------------------------------
 
         if (savedToken) {
 
             loadCartData(savedToken);
 
+        } else {
+
+            setCartItems({});
+
         }
 
     }, []);
+
 
     // ===============================
     // Context Value
@@ -319,30 +546,37 @@ const StoreContextProvider = (props) => {
 
     const contextValue = {
 
+        // Food
         food_list,
 
+        // Cart
         cartItems,
-
         setCartItems,
 
         addToCart,
-
         removeFromCart,
 
         getTotalCartAmount,
 
+        // Backend
         url,
 
+        // Authentication
         token,
-
         setToken,
 
+        // Admin
         admin,
-
         setAdmin,
 
+        // Cart Loader
         loadCartData,
     };
+
+
+    // ===============================
+    // Provider
+    // ===============================
 
     return (
         <StoreContext.Provider
@@ -352,5 +586,6 @@ const StoreContextProvider = (props) => {
         </StoreContext.Provider>
     );
 };
+
 
 export default StoreContextProvider;

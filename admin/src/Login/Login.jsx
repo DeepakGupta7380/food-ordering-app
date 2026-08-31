@@ -65,7 +65,7 @@ const Login = ({ url }) => {
 
       toast.error(
         error.response?.data?.message ||
-          "Server Error. Please try again."
+        "Server Error. Please try again."
       );
     }
   };

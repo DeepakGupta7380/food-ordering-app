@@ -1,4 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+
+import React, {
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
 import "./PlaceOrder.css";
 
 import { StoreContext } from "../context/StoreContext";
@@ -11,7 +17,13 @@ import { useNavigate } from "react-router-dom";
 
 
 const PlaceOrder = () => {
+
   const navigate = useNavigate();
+
+
+  // =====================================================
+  // Store Context
+  // =====================================================
 
   const {
     getTotalCartAmount,
@@ -22,18 +34,19 @@ const PlaceOrder = () => {
   } = useContext(StoreContext);
 
 
-  // ===============================
+  // =====================================================
   // Loading State
-  // ===============================
+  // =====================================================
 
   const [loading, setLoading] = useState(false);
 
 
-  // ===============================
+  // =====================================================
   // Delivery Information
-  // ===============================
+  // =====================================================
 
   const [data, setData] = useState({
+
     firstName: "",
     lastName: "",
     email: "",
@@ -43,193 +56,469 @@ const PlaceOrder = () => {
     zipcode: "",
     country: "",
     phone: "",
+
   });
 
 
-  // ===============================
+  // =====================================================
   // Input Change Handler
-  // ===============================
+  // =====================================================
 
   const onChangeHandler = (event) => {
+
     const { name, value } = event.target;
 
     setData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
+
   };
 
 
-  // ===============================
+  // =====================================================
   // Place Order
-  // ===============================
+  // =====================================================
 
   const placeOrder = async (event) => {
+
     event.preventDefault();
+
+
+    // ===================================================
+    // Prevent Multiple Requests
+    // ===================================================
 
     if (loading) {
       return;
     }
 
+
+    // ===================================================
     // Check Login
+    // ===================================================
+
     if (!token) {
+
       toast.error("Please Login First");
+
       navigate("/cart");
+
       return;
     }
 
 
-    // Calculate Total
-    const subtotal = getTotalCartAmount();
-
-
+    // ===================================================
     // Check Cart
+    // ===================================================
+
+    const subtotal = Number(
+      getTotalCartAmount()
+    ) || 0;
+
+
     if (subtotal <= 0) {
-      toast.error("Please Add Items to Cart");
+
+      toast.error("Your cart is empty");
+
       navigate("/cart");
+
+      return;
+    }
+
+
+    // ===================================================
+    // Check Food List
+    // ===================================================
+
+    if (!Array.isArray(food_list)) {
+
+      toast.error(
+        "Food list is not available. Please try again."
+      );
+
       return;
     }
 
 
     try {
+
       setLoading(true);
 
 
-      // ===============================
+      // =================================================
       // Create Order Items
-      // ===============================
+      // =================================================
 
       const orderItems = [];
 
-      food_list.forEach((item) => {
-        if (cartItems[item._id] > 0) {
 
+      Object.entries(cartItems || {}).forEach(
+        ([itemId, itemQuantity]) => {
+
+          const quantity =
+            Number(itemQuantity) || 0;
+
+
+          // Ignore zero quantity
+          if (quantity <= 0) {
+            return;
+          }
+
+
+          // Find food item
+          const item = food_list.find(
+            (food) =>
+              String(food._id) ===
+              String(itemId)
+          );
+
+
+          // Food not found
+          if (!item) {
+
+            console.warn(
+              "Food item not found:",
+              itemId
+            );
+
+            return;
+          }
+
+
+          // Add item
           orderItems.push({
-            ...item,
-            quantity: cartItems[item._id],
+
+            _id: item._id,
+
+            name: item.name,
+
+            price: Number(item.price),
+
+            image: item.image,
+
+            quantity: quantity,
+
           });
 
         }
-      });
+      );
 
 
+      // =================================================
       // Check Order Items
+      // =================================================
+
       if (orderItems.length === 0) {
-        toast.error("Your cart is empty");
+
+        toast.error(
+          "No valid items found in your cart"
+        );
+
         navigate("/cart");
+
         return;
       }
 
 
-      // ===============================
-      // Order Data
-      // ===============================
+      // =================================================
+      // Delivery Fee
+      // =================================================
 
-      const orderData = {
-        address: data,
-
-        items: orderItems,
-
-        amount: subtotal + 2,
-      };
+      const deliveryFee = 2;
 
 
-      // ===============================
-      // API Request
-      // ===============================
+      // =================================================
+      // Total Amount
+      // =================================================
 
-      const response = await axios.post(
-        `${url}/api/order/place`,
-        orderData,
-        {
-          headers: {
-            token: token,
-          },
-        }
+      const total = Number(
+        (subtotal + deliveryFee).toFixed(2)
       );
 
 
-      // ===============================
-      // Success
-      // ===============================
+      // =================================================
+      // Order Data
+      // =================================================
 
-      if (response.data.success) {
+      const orderData = {
 
-        const { session_url } = response.data;
+        address: {
+          firstName: data.firstName.trim(),
+          lastName: data.lastName.trim(),
+          email: data.email.trim(),
+          street: data.street.trim(),
+          city: data.city.trim(),
+          state: data.state.trim(),
+          zipcode: data.zipcode.trim(),
+          country: data.country.trim(),
+          phone: data.phone.trim(),
+        },
+
+        items: orderItems,
+
+        amount: total,
+
+      };
 
 
-        if (!session_url) {
-          toast.error(
-            "Payment session could not be created"
-          );
+      // =================================================
+      // Debug
+      // =================================================
 
-          return;
+      console.log(
+        "================================="
+      );
+
+      console.log(
+        "ORDER DATA:",
+        orderData
+      );
+
+      console.log(
+        "SUBTOTAL:",
+        subtotal
+      );
+
+      console.log(
+        "DELIVERY FEE:",
+        deliveryFee
+      );
+
+      console.log(
+        "TOTAL:",
+        total
+      );
+
+      console.log(
+        "ITEMS:",
+        orderItems
+      );
+
+      console.log(
+        "================================="
+      );
+
+
+      // =================================================
+      // Prepare Authorization Token
+      // =================================================
+
+      const authToken =
+        String(token).startsWith("Bearer ")
+          ? String(token)
+          : `Bearer ${token}`;
+
+
+      // =================================================
+      // Place Order API
+      // =================================================
+
+      const response = await axios.post(
+
+        `${url}/api/order/place`,
+
+        orderData,
+
+        {
+          headers: {
+
+            Authorization: authToken,
+
+            "Content-Type": "application/json",
+
+          },
+
         }
 
-
-        toast.success(
-          "Redirecting to payment..."
-        );
+      );
 
 
-        // Redirect to Stripe
-        window.location.replace(session_url);
+      // =================================================
+      // API Response
+      // =================================================
 
-      } else {
+      console.log(
+        "Place Order Response:",
+        response.data
+      );
+
+
+      // =================================================
+      // Check Response
+      // =================================================
+
+      if (!response.data?.success) {
 
         toast.error(
-          response.data.message ||
-            "Unable to place order"
+          response.data?.message ||
+          "Unable to place order"
         );
 
+        return;
       }
+
+
+      // =================================================
+      // Get Stripe Session URL
+      // =================================================
+
+      const sessionUrl =
+        response.data?.session_url;
+
+
+      if (!sessionUrl) {
+
+        toast.error(
+          "Payment session could not be created"
+        );
+
+        return;
+      }
+
+
+      // =================================================
+      // Payment Redirect
+      // =================================================
+
+      toast.success(
+        "Redirecting to payment..."
+      );
+
+
+      window.location.href =
+        sessionUrl;
+
 
     } catch (error) {
 
+      // =================================================
+      // Console Error
+      // =================================================
+
       console.error(
         "Place Order Error:",
+        error.response?.data ||
+        error.message ||
         error
       );
 
 
-      if (error.response) {
+      // =================================================
+      // 401 Unauthorized
+      // =================================================
+
+      if (
+        error.response?.status === 401
+      ) {
 
         toast.error(
-          error.response.data?.message ||
-            "Unable to place order"
+          error.response?.data?.message ||
+          "Session expired. Please login again."
         );
 
-      } else if (error.request) {
+
+        // Remove old token
+        localStorage.removeItem(
+          "token"
+        );
+
+
+        navigate("/");
+
+        return;
+      }
+
+
+      // =================================================
+      // 400 Bad Request
+      // =================================================
+
+      if (
+        error.response?.status === 400
+      ) {
+
+        toast.error(
+          error.response?.data?.message ||
+          "Invalid order details"
+        );
+
+        return;
+      }
+
+
+      // =================================================
+      // 404 Not Found
+      // =================================================
+
+      if (
+        error.response?.status === 404
+      ) {
+
+        toast.error(
+          error.response?.data?.message ||
+          "User or order data not found"
+        );
+
+        return;
+      }
+
+
+      // =================================================
+      // 500 Server Error
+      // =================================================
+
+      if (
+        error.response?.status >= 500
+      ) {
+
+        toast.error(
+          error.response?.data?.message ||
+          "Server error. Please try again later."
+        );
+
+        return;
+      }
+
+
+      // =================================================
+      // Server Not Responding
+      // =================================================
+
+      if (error.request) {
 
         toast.error(
           "Server is not responding. Please try again."
         );
 
-      } else {
-
-        toast.error(
-          "Something went wrong. Please try again."
-        );
-
+        return;
       }
+
+
+      // =================================================
+      // Other Error
+      // =================================================
+
+      toast.error(
+        "Something went wrong. Please try again."
+      );
 
     } finally {
 
       setLoading(false);
 
     }
+
   };
 
 
-  // ===============================
-  // Check User & Cart
-  // ===============================
+  // =====================================================
+  // Check Login & Cart
+  // =====================================================
 
   useEffect(() => {
 
     if (!token) {
-
-      toast.error("Please Login First");
 
       navigate("/cart");
 
@@ -237,43 +526,55 @@ const PlaceOrder = () => {
     }
 
 
-    if (getTotalCartAmount() === 0) {
+    const currentTotal =
+      Number(getTotalCartAmount()) || 0;
 
-      toast.error("Please Add Items to Cart");
+
+    if (currentTotal <= 0) {
+
+      toast.error(
+        "Please Add Items to Cart"
+      );
 
       navigate("/cart");
 
     }
 
-  }, [token]);
+  }, [token, navigate]);
 
 
-  // ===============================
-  // Total Amount
-  // ===============================
+  // =====================================================
+  // Cart Total
+  // =====================================================
 
-  const subtotal = getTotalCartAmount();
-
-  const deliveryFee = subtotal === 0 ? 0 : 2;
-
-  const total = subtotal === 0
-    ? 0
-    : subtotal + deliveryFee;
+  const subtotal =
+    Number(getTotalCartAmount()) || 0;
 
 
-  // ===============================
+  const deliveryFee =
+    subtotal > 0 ? 2 : 0;
+
+
+  const total =
+    subtotal > 0
+      ? subtotal + deliveryFee
+      : 0;
+
+
+  // =====================================================
   // UI
-  // ===============================
+  // =====================================================
 
   return (
+
     <form
       className="place-order"
       onSubmit={placeOrder}
     >
 
-      {/* =================================
+      {/* =================================================
           Delivery Information
-      ================================= */}
+      ================================================= */}
 
       <div className="place-order-left">
 
@@ -282,7 +583,7 @@ const PlaceOrder = () => {
         </p>
 
 
-        {/* First & Last Name */}
+        {/* First Name + Last Name */}
 
         <div className="multi-fields">
 
@@ -295,6 +596,7 @@ const PlaceOrder = () => {
             placeholder="First name"
             autoComplete="given-name"
           />
+
 
           <input
             required
@@ -335,7 +637,7 @@ const PlaceOrder = () => {
         />
 
 
-        {/* City & State */}
+        {/* City + State */}
 
         <div className="multi-fields">
 
@@ -348,6 +650,7 @@ const PlaceOrder = () => {
             placeholder="City"
             autoComplete="address-level2"
           />
+
 
           <input
             required
@@ -362,7 +665,7 @@ const PlaceOrder = () => {
         </div>
 
 
-        {/* Zip & Country */}
+        {/* Zipcode + Country */}
 
         <div className="multi-fields">
 
@@ -376,6 +679,7 @@ const PlaceOrder = () => {
             placeholder="Zip Code"
             autoComplete="postal-code"
           />
+
 
           <input
             required
@@ -406,9 +710,9 @@ const PlaceOrder = () => {
       </div>
 
 
-      {/* =================================
+      {/* =================================================
           Cart Total
-      ================================= */}
+      ================================================= */}
 
       <div className="place-order-right">
 
@@ -474,15 +778,19 @@ const PlaceOrder = () => {
           </div>
 
 
-          {/* Payment Button */}
+          {/* =================================================
+              Payment Button
+          ================================================= */}
 
           <button
             type="submit"
             disabled={loading}
           >
+
             {loading
               ? "PROCESSING..."
               : "PROCEED TO PAYMENT"}
+
           </button>
 
         </div>
@@ -490,7 +798,9 @@ const PlaceOrder = () => {
       </div>
 
     </form>
+
   );
+
 };
 
 

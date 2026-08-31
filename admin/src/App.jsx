@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   const { token, admin } = useContext(StoreContext);
 
-  const url ="https://food-ordering-app-dqtz.onrender.com";
+  const url = "https://food-ordering-app-zd8f.onrender.com";
 
   return (
     <>
@@ -54,7 +54,7 @@ const AppContent = ({ url, token, admin }) => {
   return (
     <div className="app-content">
 
-      
+
       {!isLoginPage && token && admin && <Sidebar />}
 
       <Routes>
