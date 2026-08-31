@@ -23,11 +23,15 @@ const Add = ({ url }) => {
   const { token, admin } = useContext(StoreContext);
 
 
-  // ===============================
+  // =========================================
   // States
-  // ===============================
+  // =========================================
 
   const [image, setImage] = useState(null);
+
+  const [imagePreview, setImagePreview] = useState(
+    assets.upload_area
+  );
 
   const [loading, setLoading] = useState(false);
 
@@ -39,23 +43,23 @@ const Add = ({ url }) => {
   });
 
 
-  // ===============================
+  // =========================================
   // Input Change
-  // ===============================
+  // =========================================
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
 
-    setData((prevData) => ({
-      ...prevData,
+    setData((prev) => ({
+      ...prev,
       [name]: value,
     }));
   };
 
 
-  // ===============================
+  // =========================================
   // Image Change
-  // ===============================
+  // =========================================
 
   const onImageChange = (event) => {
     const file = event.target.files?.[0];
@@ -66,7 +70,6 @@ const Add = ({ url }) => {
 
 
     // Allowed image types
-
     const allowedTypes = [
       "image/jpeg",
       "image/jpg",
@@ -82,18 +85,21 @@ const Add = ({ url }) => {
 
       event.target.value = "";
 
+      setImage(null);
+
       return;
     }
 
 
     // Maximum 5MB
-
     if (file.size > 5 * 1024 * 1024) {
       toast.error(
         "Image size must be less than 5MB"
       );
 
       event.target.value = "";
+
+      setImage(null);
 
       return;
     }
@@ -103,15 +109,38 @@ const Add = ({ url }) => {
   };
 
 
-  // ===============================
-  // Submit Product
-  // ===============================
+  // =========================================
+  // Image Preview
+  // =========================================
+
+  useEffect(() => {
+    if (!image) {
+      setImagePreview(assets.upload_area);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(image);
+
+    setImagePreview(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+
+  }, [image]);
+
+
+  // =========================================
+  // Submit Handler
+  // =========================================
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
 
-    // Check Login
+    // =======================================
+    // Token Check
+    // =======================================
 
     if (!token) {
       toast.error("Please Login First");
@@ -122,7 +151,9 @@ const Add = ({ url }) => {
     }
 
 
-    // Check Admin
+    // =======================================
+    // Admin Check
+    // =======================================
 
     if (!admin) {
       toast.error(
@@ -133,7 +164,40 @@ const Add = ({ url }) => {
     }
 
 
-    // Check Image
+    // =======================================
+    // Name Check
+    // =======================================
+
+    const name = data.name.trim();
+
+    if (!name) {
+      toast.error(
+        "Please enter product name"
+      );
+
+      return;
+    }
+
+
+    // =======================================
+    // Description Check
+    // =======================================
+
+    const description =
+      data.description.trim();
+
+    if (!description) {
+      toast.error(
+        "Please enter product description"
+      );
+
+      return;
+    }
+
+
+    // =======================================
+    // Image Check
+    // =======================================
 
     if (!image) {
       toast.error(
@@ -144,11 +208,17 @@ const Add = ({ url }) => {
     }
 
 
-    // Check Price
+    // =======================================
+    // Price Check
+    // =======================================
 
     const price = Number(data.price);
 
-    if (!price || price <= 0) {
+    if (
+      !data.price ||
+      Number.isNaN(price) ||
+      price <= 0
+    ) {
       toast.error(
         "Please enter a valid price"
       );
@@ -161,25 +231,22 @@ const Add = ({ url }) => {
       setLoading(true);
 
 
-      // ===============================
-      // Form Data
-      // ===============================
+      // =====================================
+      // Create FormData
+      // =====================================
 
       const formData = new FormData();
 
-      formData.append(
-        "name",
-        data.name.trim()
-      );
+      formData.append("name", name);
 
       formData.append(
         "description",
-        data.description.trim()
+        description
       );
 
       formData.append(
         "price",
-        price
+        price.toString()
       );
 
       formData.append(
@@ -192,10 +259,60 @@ const Add = ({ url }) => {
         image
       );
 
-      
+
+      // =====================================
+      // Check FormData
+      // =====================================
+
+      console.log(
+        "Name:",
+        formData.get("name")
+      );
+
+      console.log(
+        "Description:",
+        formData.get("description")
+      );
+
+      console.log(
+        "Price:",
+        formData.get("price")
+      );
+
+      console.log(
+        "Category:",
+        formData.get("category")
+      );
+
+      console.log(
+        "Image:",
+        formData.get("image")
+      );
+
+
+      // =====================================
+      // Backend URL
+      // =====================================
+
+      const baseUrl =
+        url?.replace(/\/+$/, "");
+
+
+      if (!baseUrl) {
+        toast.error(
+          "Backend URL is missing"
+        );
+
+        return;
+      }
+
+
+      // =====================================
+      // API Request
+      // =====================================
 
       const response = await axios.post(
-        `${url}/api/food/add`,
+        `${baseUrl}/api/food/add`,
         formData,
         {
           headers: {
@@ -205,11 +322,17 @@ const Add = ({ url }) => {
       );
 
 
-      // ===============================
-      // Response
-      // ===============================
+      console.log(
+        "Add Food Response:",
+        response.data
+      );
 
-      if (response.data.success) {
+
+      // =====================================
+      // Success
+      // =====================================
+
+      if (response.data?.success) {
 
         toast.success(
           response.data.message ||
@@ -217,8 +340,7 @@ const Add = ({ url }) => {
         );
 
 
-        // Reset Form
-
+        // Reset data
         setData({
           name: "",
           description: "",
@@ -226,51 +348,110 @@ const Add = ({ url }) => {
           category: "Salad",
         });
 
+
+        // Reset image
         setImage(null);
+
+        setImagePreview(
+          assets.upload_area
+        );
 
 
         // Reset file input
-
-        const imageInput =
+        const fileInput =
           document.getElementById("image");
 
-        if (imageInput) {
-          imageInput.value = "";
+        if (fileInput) {
+          fileInput.value = "";
         }
 
       } else {
 
         toast.error(
-          response.data.message ||
+          response.data?.message ||
           "Unable to add food"
         );
 
       }
 
+
     } catch (error) {
 
       console.error(
-        "Add Food Error:",
+        "ADD FOOD ERROR:",
         error
       );
 
 
+      // =====================================
+      // Backend Error
+      // =====================================
+
       if (error.response) {
+
+        console.error(
+          "Server Response:",
+          error.response.data
+        );
+
+
+        if (
+          error.response.status === 401
+        ) {
+
+          toast.error(
+            "Invalid or expired token. Please login again."
+          );
+
+          localStorage.removeItem("token");
+
+          navigate("/");
+
+          return;
+        }
+
+
+        if (
+          error.response.status === 403
+        ) {
+
+          toast.error(
+            "Only admin can add food items"
+          );
+
+          return;
+        }
+
 
         toast.error(
           error.response.data?.message ||
           "Server Error"
         );
 
-      } else if (error.request) {
+      }
+
+
+      // =====================================
+      // No Server Response
+      // =====================================
+
+      else if (error.request) {
 
         toast.error(
           "Server is not responding"
         );
 
-      } else {
+      }
+
+
+      // =====================================
+      // Other Error
+      // =====================================
+
+      else {
 
         toast.error(
+          error.message ||
           "Something went wrong"
         );
 
@@ -284,45 +465,29 @@ const Add = ({ url }) => {
   };
 
 
-  // ===============================
-  // Admin Authentication
-  // ===============================
+  // =========================================
+  // Authentication Check
+  // =========================================
 
   useEffect(() => {
 
     if (!token) {
-
-      toast.error(
-        "Please Login First"
-      );
-
       navigate("/");
-
       return;
     }
 
 
     if (!admin) {
-
-      toast.error(
-        "Only admin can access this page"
-      );
-
       navigate("/");
-
+      return;
     }
 
   }, [token, admin, navigate]);
 
 
-  // ===============================
-  // Image Preview
-  // ===============================
-
-  const imagePreview = image
-    ? URL.createObjectURL(image)
-    : assets.upload_area;
-
+  // =========================================
+  // JSX
+  // =========================================
 
   return (
     <div className="add">
@@ -332,10 +497,9 @@ const Add = ({ url }) => {
         className="flex-col"
       >
 
-
-        {/* =================================
+        {/* ===================================
             Upload Image
-        ================================= */}
+        =================================== */}
 
         <div className="add-img-upload flex-col">
 
@@ -355,20 +519,19 @@ const Add = ({ url }) => {
 
 
           <input
-            onChange={onImageChange}
-            type="file"
             id="image"
+            type="file"
+            onChange={onImageChange}
             accept="image/jpeg,image/jpg,image/png,image/webp"
             hidden
-            required
           />
 
         </div>
 
 
-        {/* =================================
+        {/* ===================================
             Product Name
-        ================================= */}
+        =================================== */}
 
         <div className="add-product-name flex-col">
 
@@ -376,22 +539,23 @@ const Add = ({ url }) => {
             Product name
           </p>
 
+
           <input
-            onChange={onChangeHandler}
-            value={data.name}
             type="text"
             name="name"
+            value={data.name}
+            onChange={onChangeHandler}
             placeholder="Type here"
+            maxLength={100}
             required
-            maxLength="100"
           />
 
         </div>
 
 
-        {/* =================================
+        {/* ===================================
             Product Description
-        ================================= */}
+        =================================== */}
 
         <div className="add-product-description flex-col">
 
@@ -399,25 +563,25 @@ const Add = ({ url }) => {
             Product description
           </p>
 
+
           <textarea
-            onChange={onChangeHandler}
-            value={data.description}
             name="description"
-            rows="6"
+            value={data.description}
+            onChange={onChangeHandler}
+            rows={6}
             placeholder="Write content here"
+            maxLength={500}
             required
-            maxLength="500"
           />
 
         </div>
 
 
-        {/* =================================
+        {/* ===================================
             Category & Price
-        ================================= */}
+        =================================== */}
 
         <div className="add-category-price">
-
 
           {/* Category */}
 
@@ -427,11 +591,12 @@ const Add = ({ url }) => {
               Product category
             </p>
 
+
             <select
               name="category"
-              required
-              onChange={onChangeHandler}
               value={data.category}
+              onChange={onChangeHandler}
+              required
             >
 
               <option value="Salad">
@@ -479,11 +644,12 @@ const Add = ({ url }) => {
               Product price
             </p>
 
+
             <input
-              onChange={onChangeHandler}
-              value={data.price}
               type="number"
               name="price"
+              value={data.price}
+              onChange={onChangeHandler}
               placeholder="20"
               min="1"
               step="0.01"
@@ -495,9 +661,9 @@ const Add = ({ url }) => {
         </div>
 
 
-        {/* =================================
+        {/* ===================================
             Add Button
-        ================================= */}
+        =================================== */}
 
         <button
           type="submit"
@@ -507,7 +673,8 @@ const Add = ({ url }) => {
 
           {loading
             ? "ADDING..."
-            : "ADD"}
+            : "ADD"
+          }
 
         </button>
 
